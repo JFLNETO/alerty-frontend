@@ -199,3 +199,96 @@
   background: #9ca3af;
   cursor: not-allowed;
 }
+/* Adicionar ao final do Modal.css existente */
+
+.modal-foto {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.modal-foto-circulo {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  overflow: hidden;
+  border: 2px dashed #d1d5db;
+  transition: border-color 0.2s;
+}
+
+.modal-foto-circulo:hover {
+  border-color: #111827;
+}
+
+.modal-foto-circulo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dropdown multi-seleção */
+.modal-dropdown-container {
+  position: relative;
+}
+
+.modal-dropdown-trigger {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: border-color 0.2s;
+}
+
+.modal-dropdown-trigger:hover {
+  border-color: #111827;
+}
+
+.modal-tags-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.modal-placeholder {
+  color: #9ca3af;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.modal-dropdown-lista {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.modal-dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: background 0.15s;
+}
+
+.modal-dropdown-item:hover {
+  background: #f3f4f6;
+}

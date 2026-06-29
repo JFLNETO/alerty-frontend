@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { apiPut } from "../services/api";
+import { useState, useEffect, useRef } from "react";
+import { apiPut, apiGet } from "../services/api";
 import type { Cliente } from "../types/Clientes";
 import "../styles/Modal.css";
+
+interface Servico {
+  id: number;
+  nome: string;
+}
 
 interface Props {
   cliente: Cliente;
@@ -13,21 +18,48 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   const [nome, setNome] = useState(cliente.nome);
   const [telefone, setTelefone] = useState(cliente.telefone ?? "");
   const [dataVencimento, setDataVencimento] = useState(cliente.dataVencimento);
-  const [idServicos, setIdServicos] = useState<number[]>(cliente.idServicos ?? []);
-  const [novoServico, setNovoServico] = useState("");
+  const [servicos, setServicos] = useState<Servico[]>([]);
+  const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
+  const [dropdownAberto, setDropdownAberto] = useState(false);
+  const [fotoPreview, setFotoPreview] = useState<string | null>(cliente.urlFoto);
+  const [fotoBase64, setFotoBase64] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
+  const inputFotoRef = useRef<HTMLInputElement>(null);
 
-  function adicionarServico() {
-    const id = parseInt(novoServico);
-    if (!isNaN(id) && !idServicos.includes(id)) {
-      setIdServicos([...idServicos, id]);
-      setNovoServico("");
+  useEffect(() => {
+    apiGet<Servico[]>("/servicos").then((lista) => {
+      setServicos(lista);
+      // Pré-seleciona os serviços que o cliente já tem
+      const preSelected = lista.filter((s) =>
+        cliente.idServicos?.includes(s.id)
+      );
+      setServicosSelecionados(preSelected);
+    }).catch(console.error);
+  }, []);
+
+  function selecionarServico(servico: Servico) {
+    if (!servicosSelecionados.find((s) => s.id === servico.id)) {
+      setServicosSelecionados([...servicosSelecionados, servico]);
     }
+    setDropdownAberto(false);
   }
 
   function removerServico(id: number) {
-    setIdServicos(idServicos.filter((s) => s !== id));
+    setServicosSelecionados(servicosSelecionados.filter((s) => s.id !== id));
+  }
+
+  function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setFotoPreview(result);
+      setFotoBase64(result);
+    };
+    reader.readAsDataURL(file);
   }
 
   async function editar() {
@@ -38,7 +70,8 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
         nome,
         telefone,
         dataVencimento,
-        idServicos,
+        idServicos: servicosSelecionados.map((s) => s.id),
+        ...(fotoBase64 ? { urlFoto: fotoBase64 } : {}),
       });
       onSucesso();
       onFechar();
@@ -49,6 +82,10 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
     }
   }
 
+  const servicosDisponiveis = servicos.filter(
+    (s) => !servicosSelecionados.find((sel) => sel.id === s.id)
+  );
+
   return (
     <div className="modal-overlay" onClick={onFechar}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -58,16 +95,25 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
         </div>
 
         <div className="modal-body">
-          <div className="modal-foto">
+          {/* FOTO */}
+          <div className="modal-foto" onClick={() => inputFotoRef.current?.click()}>
             <div className="modal-foto-circulo">
-              {cliente.urlFoto ? (
-                <img src={cliente.urlFoto} alt={cliente.nome} />
+              {fotoPreview ? (
+                <img src={fotoPreview} alt={cliente.nome} />
               ) : (
                 <span>Alterar imagem</span>
               )}
             </div>
+            <input
+              ref={inputFotoRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFoto}
+            />
           </div>
 
+          {/* NOME */}
           <div className="modal-campo">
             <label>Nome</label>
             <div className="modal-input-icon">
@@ -79,6 +125,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
             </div>
           </div>
 
+          {/* TELEFONE */}
           <div className="modal-campo">
             <label>Telefone</label>
             <div className="modal-input-icon">
@@ -90,29 +137,53 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
             </div>
           </div>
 
+          {/* MODALIDADE — dropdown multi-seleção */}
           <div className="modal-campo">
             <label>Modalidade</label>
-            <div className="modal-input-icon">
-              <span>⭐</span>
-              <input
-                placeholder="ID da modalidade e Enter"
-                value={novoServico}
-                onChange={(e) => setNovoServico(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && adicionarServico()}
-              />
-            </div>
-            {idServicos.length > 0 && (
-              <div className="modal-tags">
-                {idServicos.map((id) => (
-                  <span key={id} className="modal-tag">
-                    {id}
-                    <button onClick={() => removerServico(id)}>×</button>
-                  </span>
-                ))}
+            <div className="modal-dropdown-container">
+              <div
+                className="modal-dropdown-trigger"
+                onClick={() => setDropdownAberto(!dropdownAberto)}
+              >
+                <span>⭐</span>
+                <div className="modal-tags-inline">
+                  {servicosSelecionados.length === 0 ? (
+                    <span className="modal-placeholder">Selecione as modalidades</span>
+                  ) : (
+                    servicosSelecionados.map((s) => (
+                      <span key={s.id} className="modal-tag">
+                        {s.nome}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removerServico(s.id);
+                          }}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))
+                  )}
+                </div>
               </div>
-            )}
+
+              {dropdownAberto && servicosDisponiveis.length > 0 && (
+                <div className="modal-dropdown-lista">
+                  {servicosDisponiveis.map((s) => (
+                    <div
+                      key={s.id}
+                      className="modal-dropdown-item"
+                      onClick={() => selecionarServico(s)}
+                    >
+                      {s.nome}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
+          {/* DATA DE VENCIMENTO */}
           <div className="modal-campo">
             <label>Data de vencimento</label>
             <div className="modal-input-icon">
