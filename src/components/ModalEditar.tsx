@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { apiPut, apiGet } from "../services/api";
+import { uploadFoto } from "../services/s3Upload";
 import type { Cliente } from "../types/Clientes";
 import "../styles/Modal.css";
 
@@ -21,8 +22,8 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
   const [dropdownAberto, setDropdownAberto] = useState(false);
+  const [fotoArquivo, setFotoArquivo] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(cliente.urlFoto);
-  const [fotoBase64, setFotoBase64] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
   const inputFotoRef = useRef<HTMLInputElement>(null);
@@ -30,10 +31,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   useEffect(() => {
     apiGet<Servico[]>("/servicos").then((lista) => {
       setServicos(lista);
-      // Pré-seleciona os serviços que o cliente já tem
-      const preSelected = lista.filter((s) =>
-        cliente.idServicos?.includes(s.id)
-      );
+      const preSelected = lista.filter((s) => cliente.idServicos?.includes(s.id));
       setServicosSelecionados(preSelected);
     }).catch(console.error);
   }, []);
@@ -52,27 +50,29 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setFotoPreview(result);
-      setFotoBase64(result);
-    };
-    reader.readAsDataURL(file);
+    setFotoArquivo(file);
+    setFotoPreview(URL.createObjectURL(file));
   }
 
   async function editar() {
     setErro("");
     setCarregando(true);
     try {
+      let urlFoto = cliente.urlFoto;
+
+      // Se selecionou nova foto, faz upload primeiro
+      if (fotoArquivo) {
+        urlFoto = await uploadFoto(fotoArquivo, cliente.id.toString());
+      }
+
       await apiPut(`/clientes/${cliente.id}`, {
         nome,
         telefone,
         dataVencimento,
         idServicos: servicosSelecionados.map((s) => s.id),
-        ...(fotoBase64 ? { urlFoto: fotoBase64 } : {}),
+        urlFoto,
       });
+
       onSucesso();
       onFechar();
     } catch (e: unknown) {
@@ -118,10 +118,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
             <label>Nome</label>
             <div className="modal-input-icon">
               <span>👤</span>
-              <input
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
+              <input value={nome} onChange={(e) => setNome(e.target.value)} />
             </div>
           </div>
 
@@ -130,14 +127,11 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
             <label>Telefone</label>
             <div className="modal-input-icon">
               <span>📞</span>
-              <input
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-              />
+              <input value={telefone} onChange={(e) => setTelefone(e.target.value)} />
             </div>
           </div>
 
-          {/* MODALIDADE — dropdown multi-seleção */}
+          {/* MODALIDADE */}
           <div className="modal-campo">
             <label>Modalidade</label>
             <div className="modal-dropdown-container">
@@ -153,28 +147,16 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
                     servicosSelecionados.map((s) => (
                       <span key={s.id} className="modal-tag">
                         {s.nome}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removerServico(s.id);
-                          }}
-                        >
-                          ×
-                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); removerServico(s.id); }}>×</button>
                       </span>
                     ))
                   )}
                 </div>
               </div>
-
               {dropdownAberto && servicosDisponiveis.length > 0 && (
                 <div className="modal-dropdown-lista">
                   {servicosDisponiveis.map((s) => (
-                    <div
-                      key={s.id}
-                      className="modal-dropdown-item"
-                      onClick={() => selecionarServico(s)}
-                    >
+                    <div key={s.id} className="modal-dropdown-item" onClick={() => selecionarServico(s)}>
                       {s.nome}
                     </div>
                   ))}
@@ -200,14 +182,8 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
         </div>
 
         <div className="modal-footer">
-          <button className="btn-cancelar" onClick={onFechar}>
-            Cancelar
-          </button>
-          <button
-            className="btn-confirmar"
-            onClick={editar}
-            disabled={carregando}
-          >
+          <button className="btn-cancelar" onClick={onFechar}>Cancelar</button>
+          <button className="btn-confirmar" onClick={editar} disabled={carregando}>
             {carregando ? "Salvando..." : "✏ Editar"}
           </button>
         </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { apiPost, apiGet } from "../services/api";
+import { uploadFoto } from "../services/s3Upload";
 import "../styles/Modal.css";
 
 interface Servico {
@@ -21,8 +22,8 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
   const [dropdownAberto, setDropdownAberto] = useState(false);
+  const [fotoArquivo, setFotoArquivo] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
-  const [fotoBase64, setFotoBase64] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
   const inputFotoRef = useRef<HTMLInputElement>(null);
@@ -47,27 +48,28 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
   function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setFotoPreview(result);
-      setFotoBase64(result);
-    };
-    reader.readAsDataURL(file);
+    setFotoArquivo(file);
+    setFotoPreview(URL.createObjectURL(file));
   }
 
   async function cadastrar() {
     setErro("");
     setCarregando(true);
     try {
-      await apiPost("/clientes", {
+      // Primeiro cadastra o cliente sem foto para obter o ID
+      const novoCliente = await apiPost<{ id: number }>("/clientes", {
         nome,
         telefone,
         dataVencimento,
         idServicos: servicosSelecionados.map((s) => s.id),
-        urlFoto: fotoBase64,
       });
+
+      // Se tiver foto, faz upload e atualiza o cliente
+      if (fotoArquivo && novoCliente.id) {
+        const urlFoto = await uploadFoto(fotoArquivo, novoCliente.id.toString());
+        await apiPost(`/clientes/${novoCliente.id}/foto`, { urlFoto });
+      }
+
       onSucesso();
       onFechar();
     } catch (e: unknown) {
@@ -134,7 +136,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
             </div>
           </div>
 
-          {/* MODALIDADE — dropdown multi-seleção */}
+          {/* MODALIDADE */}
           <div className="modal-campo">
             <label>Modalidade</label>
             <div className="modal-dropdown-container">
@@ -150,28 +152,16 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
                     servicosSelecionados.map((s) => (
                       <span key={s.id} className="modal-tag">
                         {s.nome}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removerServico(s.id);
-                          }}
-                        >
-                          ×
-                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); removerServico(s.id); }}>×</button>
                       </span>
                     ))
                   )}
                 </div>
               </div>
-
               {dropdownAberto && servicosDisponiveis.length > 0 && (
                 <div className="modal-dropdown-lista">
                   {servicosDisponiveis.map((s) => (
-                    <div
-                      key={s.id}
-                      className="modal-dropdown-item"
-                      onClick={() => selecionarServico(s)}
-                    >
+                    <div key={s.id} className="modal-dropdown-item" onClick={() => selecionarServico(s)}>
                       {s.nome}
                     </div>
                   ))}
@@ -197,14 +187,8 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
         </div>
 
         <div className="modal-footer">
-          <button className="btn-cancelar" onClick={onFechar}>
-            Cancelar
-          </button>
-          <button
-            className="btn-confirmar"
-            onClick={cadastrar}
-            disabled={carregando}
-          >
+          <button className="btn-cancelar" onClick={onFechar}>Cancelar</button>
+          <button className="btn-confirmar" onClick={cadastrar} disabled={carregando}>
             {carregando ? "Cadastrando..." : "✏ Cadastrar"}
           </button>
         </div>
