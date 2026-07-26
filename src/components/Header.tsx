@@ -30,6 +30,13 @@ function Header() {
         >
           Relatório
         </button>
+
+        <button
+          className={`header-nav-btn ${location.pathname === "/modalidades" ? "ativo" : ""}`}
+          onClick={() => navigate("/modalidades")}
+        >
+          Modalidades
+        </button>
       </nav>
 
       <div className="header-usuario">

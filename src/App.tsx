@@ -3,6 +3,7 @@ import { estaLogado } from "./services/auth";
 import Login from "./pages/Login";
 import Clientes from "./pages/Clientes";
 import Relatorio from "./pages/Relatorio";
+import Modalidades from "./pages/Modalidades";
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
   if (!estaLogado()) {
@@ -29,6 +30,14 @@ function App() {
           element={
             <RotaProtegida>
               <Relatorio />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/modalidades"
+          element={
+            <RotaProtegida>
+              <Modalidades />
             </RotaProtegida>
           }
         />

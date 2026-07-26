@@ -88,6 +88,18 @@ export async function apiPatch<T>(endpoint: string, params?: Record<string, stri
   return response.json();
 }
 
+export async function apiDelete(endpoint: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const erro = await response.json().catch(() => ({ erro: "Erro desconhecido." }));
+    throw new Error(erro.erro ?? "Erro na requisição.");
+  }
+}
+
 async function tentarRenovarToken(): Promise<boolean> {
   const refreshToken = localStorage.getItem("refreshToken");
   if (!refreshToken) return false;
