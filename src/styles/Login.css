@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   background: #f4f6f8;
+  padding: 20px;
 }
 
 .login-card {
@@ -13,25 +14,29 @@
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   width: 100%;
   max-width: 400px;
+  max-height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+@media (max-width: 420px) {
+  .login-card {
+    padding: 28px 20px;
+  }
+}
+
 .login-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
 }
 
-.login-logo-icon {
-  font-size: 32px;
-}
-
-.login-logo h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
+.login-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
 }
 
 .login-subtitle {

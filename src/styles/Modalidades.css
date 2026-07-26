@@ -94,3 +94,42 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
 }
+
+@media (max-width: 640px) {
+  .modalidades-main {
+    padding: 16px 16px 32px;
+    padding-top: 76px;
+  }
+
+  .modalidades-topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .modalidades-topbar .btn-cadastrar {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .modalidade-row {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .modalidade-nome {
+    flex: 1 1 100%;
+  }
+
+  .modalidade-valor {
+    order: 2;
+  }
+
+  .modalidade-acoes {
+    order: 3;
+    flex: 1 1 auto;
+    margin-left: auto;
+  }
+}

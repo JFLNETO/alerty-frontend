@@ -218,3 +218,55 @@
   border: 1px solid #e5e7eb;
   border-top: none;
 }
+
+@media (max-width: 640px) {
+  .clientes-main {
+    padding: 16px 16px 0;
+    padding-top: 76px;
+  }
+
+  .clientes-topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .clientes-busca {
+    flex: 1 1 100%;
+  }
+
+  .clientes-busca input {
+    width: 100%;
+  }
+
+  .btn-cadastrar {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .cliente-row {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .cliente-nome {
+    flex: 1 1 60%;
+  }
+
+  .cliente-vencimento {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .cliente-acoes {
+    flex: 1 1 100%;
+  }
+
+  .cliente-acoes .btn-pagar,
+  .cliente-acoes .btn-inativar {
+    flex: 1;
+    width: auto;
+  }
+}

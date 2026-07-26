@@ -102,7 +102,8 @@
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 15px;
-  width: 220px;
+  width: 100%;
+  max-width: 220px;
   text-align: center;
 }
 
@@ -145,4 +146,30 @@
 @keyframes girar {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .conectar-main {
+    padding: 16px 16px 24px;
+    padding-top: 76px;
+  }
+
+  .conectar-card {
+    padding: 24px 16px;
+  }
+
+  .conectar-toggle {
+    width: 100%;
+  }
+
+  .conectar-toggle-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .conectar-qr {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
 }

@@ -1,13 +1,29 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../services/auth";
+import { Menu, X } from "lucide-react";
 import "../styles/Header.css";
+
+const ITENS_NAV = [
+  { rota: "/", label: "Meus clientes" },
+  { rota: "/relatorio", label: "Relatório" },
+  { rota: "/modalidades", label: "Modalidades" },
+  { rota: "/alertas", label: "Alertas" },
+  { rota: "/whatsapp", label: "WhatsApp" },
+];
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [menuAberto, setMenuAberto] = useState(false);
 
   async function handleLogout() {
     await logout();
+  }
+
+  function irPara(rota: string) {
+    navigate(rota);
+    setMenuAberto(false);
   }
 
   return (
@@ -16,41 +32,23 @@ function Header() {
         <img src="/logo.png" alt="Alerty" className="header-logo-img" />
       </div>
 
-      <nav className="header-nav">
-        <button
-          className={`header-nav-btn ${location.pathname === "/" ? "ativo" : ""}`}
-          onClick={() => navigate("/")}
-        >
-          Meus clientes
-        </button>
+      <nav className={`header-nav ${menuAberto ? "aberto" : ""}`}>
+        {ITENS_NAV.map((item) => (
+          <button
+            key={item.rota}
+            className={`header-nav-btn ${location.pathname === item.rota ? "ativo" : ""}`}
+            onClick={() => irPara(item.rota)}
+          >
+            {item.label}
+          </button>
+        ))}
 
-        <button
-          className={`header-nav-btn ${location.pathname === "/relatorio" ? "ativo" : ""}`}
-          onClick={() => navigate("/relatorio")}
-        >
-          Relatório
-        </button>
-
-        <button
-          className={`header-nav-btn ${location.pathname === "/modalidades" ? "ativo" : ""}`}
-          onClick={() => navigate("/modalidades")}
-        >
-          Modalidades
-        </button>
-
-        <button
-          className={`header-nav-btn ${location.pathname === "/alertas" ? "ativo" : ""}`}
-          onClick={() => navigate("/alertas")}
-        >
-          Alertas
-        </button>
-
-        <button
-          className={`header-nav-btn ${location.pathname === "/whatsapp" ? "ativo" : ""}`}
-          onClick={() => navigate("/whatsapp")}
-        >
-          WhatsApp
-        </button>
+        <div className="header-usuario-mobile">
+          <span>Neto Lima</span>
+          <button className="header-sair" onClick={handleLogout}>
+            Sair
+          </button>
+        </div>
       </nav>
 
       <div className="header-usuario">
@@ -59,6 +57,14 @@ function Header() {
           Sair
         </button>
       </div>
+
+      <button
+        className="header-menu-btn"
+        onClick={() => setMenuAberto(!menuAberto)}
+        aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
+      >
+        {menuAberto ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+      </button>
     </header>
   );
 }

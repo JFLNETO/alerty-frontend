@@ -51,11 +51,13 @@
   background: white;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .relatorio-tabela {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -109,4 +111,29 @@
   background: white;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 640px) {
+  .relatorio-main {
+    padding: 16px 16px 24px;
+    padding-top: 76px;
+  }
+
+  .relatorio-filtros {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .relatorio-campo {
+    flex: 1 1 45%;
+  }
+
+  .relatorio-campo input {
+    width: 100%;
+  }
+
+  .relatorio-btn {
+    flex: 1 1 100%;
+  }
 }

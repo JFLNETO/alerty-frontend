@@ -7,6 +7,7 @@ import "../styles/Relatorio.css";
 interface Pagamento {
   id: number;
   clienteId: string;
+  clienteNome: string;
   idEmpresa: number;
   valor: number;
   dataPagamento: string;
@@ -111,7 +112,7 @@ function Relatorio() {
                 {relatorio.pagamentos.map((p) => (
                   <tr key={p.id}>
                     <td>{formatarData(p.dataPagamento)}</td>
-                    <td>{p.clienteId}</td>
+                    <td>{p.clienteNome}</td>
                     <td>{formatarValor(p.valor)}</td>
                     <td>{formatarData(p.dataVencimentoAnterior)}</td>
                   </tr>

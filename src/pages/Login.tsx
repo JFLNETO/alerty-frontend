@@ -29,8 +29,7 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-logo">
-          <span className="login-logo-icon">🎯</span>
-          <h1>Alerty</h1>
+          <img src="/logo.png" alt="Alerty" className="login-logo-img" />
         </div>
 
         <p className="login-subtitle">Gestão de mensalidades</p>
