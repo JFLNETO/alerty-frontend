@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { apiPut, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
 import type { Cliente } from "../types/Clientes";
+import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Servico {
@@ -91,7 +92,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Editar cliente</h2>
-          <button className="modal-fechar" onClick={onFechar}>✕</button>
+          <button className="modal-fechar" onClick={onFechar}><X size={18} strokeWidth={1.5} /></button>
         </div>
 
         <div className="modal-body">
@@ -117,7 +118,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Nome</label>
             <div className="modal-input-icon">
-              <span>👤</span>
+              <User size={16} strokeWidth={1.5} />
               <input value={nome} onChange={(e) => setNome(e.target.value)} />
             </div>
           </div>
@@ -126,7 +127,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Telefone</label>
             <div className="modal-input-icon">
-              <span>📞</span>
+              <Phone size={16} strokeWidth={1.5} />
               <input value={telefone} onChange={(e) => setTelefone(e.target.value)} />
             </div>
           </div>
@@ -139,7 +140,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
                 className="modal-dropdown-trigger"
                 onClick={() => setDropdownAberto(!dropdownAberto)}
               >
-                <span>⭐</span>
+                <Star size={16} strokeWidth={1.5} />
                 <div className="modal-tags-inline">
                   {servicosSelecionados.length === 0 ? (
                     <span className="modal-placeholder">Selecione as modalidades</span>
@@ -169,7 +170,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Data de vencimento</label>
             <div className="modal-input-icon">
-              <span>📅</span>
+              <CalendarDays size={16} strokeWidth={1.5} />
               <input
                 type="date"
                 value={dataVencimento}
@@ -184,7 +185,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
         <div className="modal-footer">
           <button className="btn-cancelar" onClick={onFechar}>Cancelar</button>
           <button className="btn-confirmar" onClick={editar} disabled={carregando}>
-            {carregando ? "Salvando..." : "✏ Editar"}
+            {carregando ? "Salvando..." : <><Pencil size={14} strokeWidth={1.5} /> Editar</>}
           </button>
         </div>
       </div>

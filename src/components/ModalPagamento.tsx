@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { apiPost } from "../services/api";
 import type { Cliente } from "../types/Clientes";
+import { X, Check } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Props {
@@ -49,7 +50,7 @@ function ModalPagamento({ cliente, onFechar, onSucesso }: Props) {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Confirmar pagamento</h2>
-          <button className="modal-fechar" onClick={onFechar}>✕</button>
+          <button className="modal-fechar" onClick={onFechar}><X size={18} strokeWidth={1.5} /></button>
         </div>
 
         <div className="modal-body">
@@ -95,7 +96,7 @@ function ModalPagamento({ cliente, onFechar, onSucesso }: Props) {
             onClick={confirmar}
             disabled={carregando}
           >
-            {carregando ? "Confirmando..." : "✓ Confirmar"}
+            {carregando ? "Confirmando..." : <><Check size={14} strokeWidth={1.5} /> Confirmar</>}
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import ModalPagamento from "../components/ModalPagamento";
 import ModalCadastrar from "../components/ModalCadastrar";
 import ModalEditar from "../components/ModalEditar";
+import { Search, Plus, Check, SquareX, AlignJustify, Square } from "lucide-react";
 import "../styles/Clientes.css";
 
 function Clientes() {
@@ -61,7 +62,7 @@ function Clientes() {
         <div className="clientes-fixo">
           <div className="clientes-topbar">
             <div className="clientes-busca">
-              <span className="busca-icon">🔍</span>
+              <Search size={16} strokeWidth={1.5} className="busca-icon" />
               <input
                 placeholder="Buscar cliente..."
                 value={busca}
@@ -72,7 +73,7 @@ function Clientes() {
               className="btn-cadastrar"
               onClick={() => setMostrarCadastrar(true)}
             >
-              + Cadastrar
+              <Plus size={14} strokeWidth={1.5} /> Cadastrar
             </button>
           </div>
 
@@ -89,7 +90,7 @@ function Clientes() {
                 }
                 title="Inativos"
               >
-                ■
+                <SquareX size={16} strokeWidth={1.5} />
               </button>
               <button
                 className={`filtro-btn ${filtroAtivo === "todos" ? "ativo" : ""}`}
@@ -98,14 +99,14 @@ function Clientes() {
                 }
                 title="Todos"
               >
-                ≡
+                <AlignJustify size={16} strokeWidth={1.5} />
               </button>
               <button
                 className={`filtro-btn em-dia ${filtroAtivo === "ativos" ? "ativo" : ""}`}
                 onClick={() => setFiltroAtivo("ativos")}
                 title="Ativos"
               >
-                □
+                <Square size={16} strokeWidth={1.5} />
               </button>
             </div>
           </div>
@@ -141,7 +142,7 @@ function Clientes() {
                         className={`btn-pagar ${!precisaPagar ? "pago" : ""}`}
                         onClick={() => setClientePagamento(cliente)}
                       >
-                        ✓ {precisaPagar ? "Pagar" : "Pago"}
+                        <Check size={14} strokeWidth={1.5} /> {precisaPagar ? "Pagar" : "Pago"}
                       </button>
                       <button
                         className={`btn-inativar ${!cliente.ativo ? "reativar" : ""}`}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { apiPost, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
+import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Servico {
@@ -88,7 +89,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Cadastrar cliente</h2>
-          <button className="modal-fechar" onClick={onFechar}>✕</button>
+          <button className="modal-fechar" onClick={onFechar}><X size={18} /></button>
         </div>
 
         <div className="modal-body">
@@ -114,7 +115,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Nome</label>
             <div className="modal-input-icon">
-              <span>👤</span>
+              <User size={16} strokeWidth={1.5} />
               <input
                 placeholder="Nome"
                 value={nome}
@@ -127,7 +128,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Telefone</label>
             <div className="modal-input-icon">
-              <span>📞</span>
+              <Phone size={16} strokeWidth={1.5} />
               <input
                 placeholder="Telefone"
                 value={telefone}
@@ -144,7 +145,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
                 className="modal-dropdown-trigger"
                 onClick={() => setDropdownAberto(!dropdownAberto)}
               >
-                <span>⭐</span>
+                <Star size={16} strokeWidth={1.5} />
                 <div className="modal-tags-inline">
                   {servicosSelecionados.length === 0 ? (
                     <span className="modal-placeholder">Selecione as modalidades</span>
@@ -174,7 +175,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Data de vencimento</label>
             <div className="modal-input-icon">
-              <span>📅</span>
+              <CalendarDays size={16} strokeWidth={1.5} />
               <input
                 type="date"
                 value={dataVencimento}
@@ -189,7 +190,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
         <div className="modal-footer">
           <button className="btn-cancelar" onClick={onFechar}>Cancelar</button>
           <button className="btn-confirmar" onClick={cadastrar} disabled={carregando}>
-            {carregando ? "Cadastrando..." : "✏ Cadastrar"}
+            {carregando ? "Cadastrando..." : <><Pencil size={14} strokeWidth={1.5} /> Cadastrar</>}
           </button>
         </div>
       </div>

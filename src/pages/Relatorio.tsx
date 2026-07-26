@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../services/api";
 import Header from "../components/Header";
+import { CalendarDays } from "lucide-react";
 import "../styles/Relatorio.css";
 
 interface Pagamento {
@@ -69,7 +70,7 @@ function Relatorio() {
       <main className="relatorio-main">
         <div className="relatorio-filtros">
           <div className="relatorio-campo">
-            <span>📅</span>
+            <CalendarDays size={16} strokeWidth={1.5} />
             <label>Início</label>
             <input
               type="date"
@@ -79,7 +80,7 @@ function Relatorio() {
           </div>
 
           <div className="relatorio-campo">
-            <span>📅</span>
+            <CalendarDays size={16} strokeWidth={1.5} />
             <label>Fim</label>
             <input
               type="date"
