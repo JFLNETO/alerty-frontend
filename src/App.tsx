@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { estaLogado } from "./services/auth";
 import Login from "./pages/Login";
+import Registro from "./pages/Registro";
+import BemVindo from "./pages/BemVindo";
 import Clientes from "./pages/Clientes";
 import Relatorio from "./pages/Relatorio";
 import Modalidades from "./pages/Modalidades";
@@ -19,6 +21,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
+        <Route
+          path="/bem-vindo"
+          element={
+            <RotaProtegida>
+              <BemVindo />
+            </RotaProtegida>
+          }
+        />
         <Route
           path="/"
           element={

@@ -32,6 +32,37 @@ export async function login(
   return dados;
 }
 
+export interface RegistrarResponse extends LoginResponse {
+  nomeEmpresa: string;
+}
+
+export async function registrar(dados: {
+  nomeEmpresa: string;
+  nomeDono: string;
+  whatsappDono: string;
+  email: string;
+  senha: string;
+}): Promise<RegistrarResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/registro`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+
+  if (!response.ok) {
+    const erro = await response.json().catch(() => ({ erro: "Erro ao cadastrar." }));
+    throw new Error(erro.erro ?? "Erro ao cadastrar.");
+  }
+
+  const resultado: RegistrarResponse = await response.json();
+
+  localStorage.setItem("accessToken", resultado.accessToken);
+  localStorage.setItem("refreshToken", resultado.refreshToken);
+  localStorage.setItem("idEmpresa", resultado.idEmpresa.toString());
+
+  return resultado;
+}
+
 export async function logout(): Promise<void> {
   const refreshToken = localStorage.getItem("refreshToken");
 

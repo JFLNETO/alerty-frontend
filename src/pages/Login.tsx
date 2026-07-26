@@ -75,6 +75,14 @@ function Login() {
         >
           {carregando ? "Entrando..." : "Entrar"}
         </button>
+
+        <button
+          className="login-link"
+          onClick={() => navigate("/registro")}
+          type="button"
+        >
+          Ainda não tem conta? Cadastre sua academia
+        </button>
       </div>
     </div>
   );
