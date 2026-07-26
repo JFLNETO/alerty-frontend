@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Clientes from "./pages/Clientes";
 import Relatorio from "./pages/Relatorio";
 import Modalidades from "./pages/Modalidades";
+import ConectarWhatsApp from "./pages/ConectarWhatsApp";
+import Alertas from "./pages/Alertas";
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
   if (!estaLogado()) {
@@ -38,6 +40,22 @@ function App() {
           element={
             <RotaProtegida>
               <Modalidades />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/whatsapp"
+          element={
+            <RotaProtegida>
+              <ConectarWhatsApp />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/alertas"
+          element={
+            <RotaProtegida>
+              <Alertas />
             </RotaProtegida>
           }
         />

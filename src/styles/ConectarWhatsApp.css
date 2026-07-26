@@ -1,0 +1,148 @@
+.conectar-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 32px 32px;
+  padding-top: 84px;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.conectar-main h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.conectar-subtitulo {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.conectar-card {
+  width: 100%;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px 24px;
+}
+
+.conectar-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.conectar-toggle {
+  display: flex;
+  gap: 6px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.conectar-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.conectar-toggle-btn.ativo {
+  background: white;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.conectar-qr {
+  width: 220px;
+  height: 220px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.conectar-instrucao {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+.conectar-pairing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.conectar-pairing label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.conectar-pairing input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 15px;
+  width: 220px;
+  text-align: center;
+}
+
+.conectar-codigo {
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #111827;
+  background: #f3f4f6;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+
+.conectar-icone-ok {
+  color: #22c55e;
+}
+
+.conectar-erro-estado {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.conectar-erro {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.girando {
+  animation: girar 1.2s linear infinite;
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

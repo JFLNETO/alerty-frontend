@@ -37,6 +37,20 @@ function Header() {
         >
           Modalidades
         </button>
+
+        <button
+          className={`header-nav-btn ${location.pathname === "/alertas" ? "ativo" : ""}`}
+          onClick={() => navigate("/alertas")}
+        >
+          Alertas
+        </button>
+
+        <button
+          className={`header-nav-btn ${location.pathname === "/whatsapp" ? "ativo" : ""}`}
+          onClick={() => navigate("/whatsapp")}
+        >
+          WhatsApp
+        </button>
       </nav>
 
       <div className="header-usuario">
