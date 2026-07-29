@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../services/auth";
+import { logout, obterNomeDono } from "../services/auth";
 import { Menu, X } from "lucide-react";
 import "../styles/Header.css";
 
@@ -16,6 +16,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuAberto, setMenuAberto] = useState(false);
+  const nomeDono = obterNomeDono();
 
   async function handleLogout() {
     await logout();
@@ -44,7 +45,7 @@ function Header() {
         ))}
 
         <div className="header-usuario-mobile">
-          <span>Neto Lima</span>
+          <span>{nomeDono}</span>
           <button className="header-sair" onClick={handleLogout}>
             Sair
           </button>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { apiPost } from "../services/api";
-import { Tag, DollarSign, Repeat, X, Pencil } from "lucide-react";
+import { Tag, Repeat, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Props {
@@ -60,7 +60,7 @@ function ModalCadastrarModalidade({ onFechar, onSucesso }: Props) {
           <div className="modal-campo">
             <label>Valor da mensalidade (R$)</label>
             <div className="modal-input-icon">
-              <DollarSign size={16} strokeWidth={1.5} />
+              <span className="modal-currency">R$</span>
               <input
                 type="number"
                 min="0"

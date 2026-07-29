@@ -293,3 +293,11 @@
 .modal-dropdown-item:hover {
   background: #f3f4f6;
 }
+
+.modal-currency {
+  font-size: 14px;
+  font-weight: 600;
+  width: 16px;
+  flex-shrink: 0;
+  text-align: center;
+}

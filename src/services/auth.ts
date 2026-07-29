@@ -5,6 +5,7 @@ export interface LoginResponse {
   refreshToken: string;
   expiresIn: number;
   idEmpresa: number;
+  nomeDono: string | null;
 }
 
 export async function login(
@@ -28,6 +29,7 @@ export async function login(
   localStorage.setItem("accessToken", dados.accessToken);
   localStorage.setItem("refreshToken", dados.refreshToken);
   localStorage.setItem("idEmpresa", dados.idEmpresa.toString());
+  localStorage.setItem("nomeDono", dados.nomeDono ?? "");
 
   return dados;
 }
@@ -59,6 +61,7 @@ export async function registrar(dados: {
   localStorage.setItem("accessToken", resultado.accessToken);
   localStorage.setItem("refreshToken", resultado.refreshToken);
   localStorage.setItem("idEmpresa", resultado.idEmpresa.toString());
+  localStorage.setItem("nomeDono", resultado.nomeDono ?? "");
 
   return resultado;
 }
@@ -80,4 +83,8 @@ export async function logout(): Promise<void> {
 
 export function estaLogado(): boolean {
   return !!localStorage.getItem("accessToken");
+}
+
+export function obterNomeDono(): string {
+  return localStorage.getItem("nomeDono") || "Minha conta";
 }
