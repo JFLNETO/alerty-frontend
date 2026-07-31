@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { estaLogado } from "./services/auth";
+import { estaLogado, souAdmin } from "./services/auth";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import BemVindo from "./pages/BemVindo";
@@ -8,10 +8,21 @@ import Relatorio from "./pages/Relatorio";
 import Modalidades from "./pages/Modalidades";
 import ConectarWhatsApp from "./pages/ConectarWhatsApp";
 import Alertas from "./pages/Alertas";
+import PainelAdmin from "./pages/PainelAdmin";
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
   if (!estaLogado()) {
     return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+}
+
+function RotaAdmin({ children }: { children: React.ReactNode }) {
+  if (!estaLogado()) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!souAdmin()) {
+    return <Navigate to="/" replace />;
   }
   return <>{children}</>;
 }
@@ -68,6 +79,14 @@ function App() {
             <RotaProtegida>
               <Alertas />
             </RotaProtegida>
+          }
+        />
+        <Route
+          path="/paineladm"
+          element={
+            <RotaAdmin>
+              <PainelAdmin />
+            </RotaAdmin>
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

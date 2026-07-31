@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { logout, obterNomeDono } from "../services/auth";
+import { logout, obterNomeDono, souAdmin } from "../services/auth";
 import { Menu, X } from "lucide-react";
 import "../styles/Header.css";
 
@@ -12,11 +12,14 @@ const ITENS_NAV = [
   { rota: "/whatsapp", label: "WhatsApp" },
 ];
 
+const ITEM_NAV_ADMIN = { rota: "/paineladm", label: "Painel admin" };
+
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuAberto, setMenuAberto] = useState(false);
   const nomeDono = obterNomeDono();
+  const itensNav = souAdmin() ? [...ITENS_NAV, ITEM_NAV_ADMIN] : ITENS_NAV;
 
   async function handleLogout() {
     await logout();
@@ -34,7 +37,7 @@ function Header() {
       </div>
 
       <nav className={`header-nav ${menuAberto ? "aberto" : ""}`}>
-        {ITENS_NAV.map((item) => (
+        {itensNav.map((item) => (
           <button
             key={item.rota}
             className={`header-nav-btn ${location.pathname === item.rota ? "ativo" : ""}`}

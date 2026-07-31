@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://alerty-api-dotnet-production.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export interface LoginResponse {
   accessToken: string;
@@ -6,6 +6,7 @@ export interface LoginResponse {
   expiresIn: number;
   idEmpresa: number;
   nomeDono: string | null;
+  isAdmin: boolean;
 }
 
 export async function login(
@@ -30,6 +31,7 @@ export async function login(
   localStorage.setItem("refreshToken", dados.refreshToken);
   localStorage.setItem("idEmpresa", dados.idEmpresa.toString());
   localStorage.setItem("nomeDono", dados.nomeDono ?? "");
+  localStorage.setItem("isAdmin", dados.isAdmin ? "true" : "false");
 
   return dados;
 }
@@ -62,6 +64,7 @@ export async function registrar(dados: {
   localStorage.setItem("refreshToken", resultado.refreshToken);
   localStorage.setItem("idEmpresa", resultado.idEmpresa.toString());
   localStorage.setItem("nomeDono", resultado.nomeDono ?? "");
+  localStorage.setItem("isAdmin", resultado.isAdmin ? "true" : "false");
 
   return resultado;
 }
@@ -83,6 +86,10 @@ export async function logout(): Promise<void> {
 
 export function estaLogado(): boolean {
   return !!localStorage.getItem("accessToken");
+}
+
+export function souAdmin(): boolean {
+  return localStorage.getItem("isAdmin") === "true";
 }
 
 export function obterNomeDono(): string {

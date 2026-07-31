@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://alerty-api-dotnet-production.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function getToken(): string | null {
   return localStorage.getItem("accessToken");
