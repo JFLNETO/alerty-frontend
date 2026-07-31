@@ -53,7 +53,7 @@ function Header() {
       </nav>
 
       <div className="header-usuario">
-        <span>Neto Lima</span>
+        <span>{nomeDono}</span>
         <button className="header-sair" onClick={handleLogout}>
           Sair
         </button>
