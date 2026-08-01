@@ -126,7 +126,7 @@ function ConectarWhatsApp() {
         <div className="conectar-card">
           {carregando && !status && <p>Carregando...</p>}
 
-          {!carregando && (!situacao || situacao === "STOPPED" || situacao === "FAILED") && (
+          {!carregando && (!situacao || situacao === "NOT_FOUND" || situacao === "STOPPED" || situacao === "FAILED") && (
             <div className="conectar-estado">
               {situacao === "FAILED" && (
                 <p className="conectar-erro-estado">
