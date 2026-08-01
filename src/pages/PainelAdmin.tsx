@@ -88,6 +88,11 @@ function PainelAdmin() {
   }
 
   async function enviarTeste(item: AlertaPendente) {
+    const confirmado = confirm(
+      `Enviar mensagem de verdade para ${item.nome} (${item.telefone}) agora?`
+    );
+    if (!confirmado) return;
+
     const id = chave(item);
     setStatusEnvio((atual) => ({ ...atual, [id]: "enviando" }));
     try {
