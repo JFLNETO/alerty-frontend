@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import ModalPagamento from "../components/ModalPagamento";
 import ModalCadastrar from "../components/ModalCadastrar";
 import ModalEditar from "../components/ModalEditar";
-import { Search, Plus, Check, SquareX, AlignJustify, Square, ChevronRight } from "lucide-react";
+import { Search, Plus, Check, SquareX, AlignJustify, Square, Eye } from "lucide-react";
 import "../styles/Clientes.css";
 
 function Clientes() {
@@ -135,7 +135,7 @@ function Clientes() {
                       <span className="cliente-vencimento">
                         {formatarData(cliente.dataVencimento)}
                       </span>
-                      <ChevronRight size={18} strokeWidth={1.5} className="cliente-info-seta" />
+                      <Eye size={18} strokeWidth={1.5} className="cliente-info-olho" />
                     </div>
                     <div
                       className="cliente-acoes"

@@ -64,10 +64,39 @@
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s;
+  width: 100%;
 }
 
 .login-campo input:focus {
   border-color: #111827;
+}
+
+.login-senha-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.login-senha-wrapper input {
+  padding-right: 42px;
+}
+
+.login-senha-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.login-senha-toggle:hover {
+  color: #111827;
 }
 
 .login-manter {

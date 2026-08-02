@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { login } from "../services/auth";
 import "../styles/Login.css";
 
@@ -7,6 +8,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const [manterConectado, setManterConectado] = useState(false);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -49,13 +51,24 @@ function Login() {
 
         <div className="login-campo">
           <label>Senha</label>
-          <input
-            type="password"
-            placeholder="••••••"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          />
+          <div className="login-senha-wrapper">
+            <input
+              type={mostrarSenha ? "text" : "password"}
+              placeholder="••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            />
+            <button
+              type="button"
+              className="login-senha-toggle"
+              onClick={() => setMostrarSenha((v) => !v)}
+              tabIndex={-1}
+              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {mostrarSenha ? <EyeOff size={18} strokeWidth={1.5} /> : <Eye size={18} strokeWidth={1.5} />}
+            </button>
+          </div>
         </div>
 
         <label className="login-manter">

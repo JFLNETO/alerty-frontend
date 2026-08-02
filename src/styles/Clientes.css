@@ -157,7 +157,7 @@
   min-width: 60px;
 }
 
-.cliente-info-seta {
+.cliente-info-olho {
   display: none;
   color: #9ca3af;
   flex-shrink: 0;
@@ -284,7 +284,7 @@
     margin-left: auto;
   }
 
-  .cliente-info-seta {
+  .cliente-info-olho {
     display: block;
   }
 
