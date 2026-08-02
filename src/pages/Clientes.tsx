@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import ModalPagamento from "../components/ModalPagamento";
 import ModalCadastrar from "../components/ModalCadastrar";
 import ModalEditar from "../components/ModalEditar";
-import { Search, Plus, Check, SquareX, AlignJustify, Square } from "lucide-react";
+import { Search, Plus, Check, SquareX, AlignJustify, Square, ChevronRight } from "lucide-react";
 import "../styles/Clientes.css";
 
 function Clientes() {
@@ -130,10 +130,13 @@ function Clientes() {
                     className={`cliente-row status-${status}`}
                     onClick={() => setClienteEditar(cliente)}
                   >
-                    <span className="cliente-nome">{cliente.nome}</span>
-                    <span className="cliente-vencimento">
-                      {formatarData(cliente.dataVencimento)}
-                    </span>
+                    <div className="cliente-info">
+                      <span className="cliente-nome">{cliente.nome}</span>
+                      <span className="cliente-vencimento">
+                        {formatarData(cliente.dataVencimento)}
+                      </span>
+                      <ChevronRight size={18} strokeWidth={1.5} className="cliente-info-seta" />
+                    </div>
                     <div
                       className="cliente-acoes"
                       onClick={(e) => e.stopPropagation()}
