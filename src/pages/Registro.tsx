@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { registrar } from "../services/auth";
 import "../styles/Login.css";
 
@@ -11,6 +12,8 @@ function Registro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
 
@@ -83,23 +86,45 @@ function Registro() {
 
         <div className="login-campo">
           <label>Senha</label>
-          <input
-            type="password"
-            placeholder="mínimo 6 caracteres"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+          <div className="login-senha-wrapper">
+            <input
+              type={mostrarSenha ? "text" : "password"}
+              placeholder="mínimo 6 caracteres"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+            <button
+              type="button"
+              className="login-senha-toggle"
+              onClick={() => setMostrarSenha((v) => !v)}
+              tabIndex={-1}
+              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {mostrarSenha ? <EyeOff size={18} strokeWidth={1.5} /> : <Eye size={18} strokeWidth={1.5} />}
+            </button>
+          </div>
         </div>
 
         <div className="login-campo">
           <label>Confirmar senha</label>
-          <input
-            type="password"
-            placeholder="••••••"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleRegistrar()}
-          />
+          <div className="login-senha-wrapper">
+            <input
+              type={mostrarConfirmarSenha ? "text" : "password"}
+              placeholder="••••••"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleRegistrar()}
+            />
+            <button
+              type="button"
+              className="login-senha-toggle"
+              onClick={() => setMostrarConfirmarSenha((v) => !v)}
+              tabIndex={-1}
+              aria-label={mostrarConfirmarSenha ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {mostrarConfirmarSenha ? <EyeOff size={18} strokeWidth={1.5} /> : <Eye size={18} strokeWidth={1.5} />}
+            </button>
+          </div>
         </div>
 
         <button className="login-btn" onClick={handleRegistrar} disabled={carregando}>
