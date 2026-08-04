@@ -57,19 +57,19 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
     setErro("");
     setCarregando(true);
     try {
-      // Primeiro cadastra o cliente sem foto para obter o ID
-      const novoCliente = await apiPost<{ id: number }>("/clientes", {
+      // Se tiver foto, faz upload primeiro para já cadastrar o cliente com a URL
+      let urlFoto: string | null = null;
+      if (fotoArquivo) {
+        urlFoto = await uploadFoto(fotoArquivo, "novo");
+      }
+
+      await apiPost("/clientes", {
         nome,
         telefone,
         dataVencimento,
         idServicos: servicosSelecionados.map((s) => s.id),
+        urlFoto,
       });
-
-      // Se tiver foto, faz upload e atualiza o cliente
-      if (fotoArquivo && novoCliente.id) {
-        const urlFoto = await uploadFoto(fotoArquivo, novoCliente.id.toString());
-        await apiPost(`/clientes/${novoCliente.id}/foto`, { urlFoto });
-      }
 
       onSucesso();
       onFechar();

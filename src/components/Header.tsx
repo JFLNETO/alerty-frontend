@@ -33,7 +33,7 @@ function Header() {
   return (
     <header className="header">
       <div className="header-logo">
-        <img src="/logo.png" alt="Alerty" className="header-logo-img" />
+        <img src="/logo-header.png" alt="CheckyGo" className="header-logo-img" />
       </div>
 
       <nav className={`header-nav ${menuAberto ? "aberto" : ""}`}>
