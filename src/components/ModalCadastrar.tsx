@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { apiPost, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
+import { apenasDigitos, formatarTelefone } from "../types/Clientes";
 import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
@@ -130,9 +131,9 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
             <div className="modal-input-icon">
               <Phone size={16} strokeWidth={1.5} />
               <input
-                placeholder="Telefone"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
+                placeholder="(79) 91234-5678"
+                value={formatarTelefone(telefone)}
+                onChange={(e) => setTelefone(apenasDigitos(e.target.value))}
               />
             </div>
           </div>

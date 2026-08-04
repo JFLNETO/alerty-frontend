@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { registrar } from "../services/auth";
+import { apenasDigitos, formatarTelefone } from "../types/Clientes";
 import "../styles/Login.css";
 
 function Registro() {
@@ -68,9 +69,9 @@ function Registro() {
         <div className="login-campo">
           <label>Seu WhatsApp</label>
           <input
-            placeholder="79999990000"
-            value={whatsappDono}
-            onChange={(e) => setWhatsappDono(e.target.value)}
+            placeholder="(79) 91234-5678"
+            value={formatarTelefone(whatsappDono)}
+            onChange={(e) => setWhatsappDono(apenasDigitos(e.target.value))}
           />
         </div>
 

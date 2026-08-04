@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { apiPut, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
-import type { Cliente } from "../types/Clientes";
+import { apenasDigitos, formatarTelefone, type Cliente } from "../types/Clientes";
 import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
@@ -18,7 +18,7 @@ interface Props {
 
 function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   const [nome, setNome] = useState(cliente.nome);
-  const [telefone, setTelefone] = useState(cliente.telefone ?? "");
+  const [telefone, setTelefone] = useState(apenasDigitos(cliente.telefone ?? ""));
   const [dataVencimento, setDataVencimento] = useState(cliente.dataVencimento);
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
@@ -128,7 +128,11 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
             <label>Telefone</label>
             <div className="modal-input-icon">
               <Phone size={16} strokeWidth={1.5} />
-              <input value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+              <input
+                placeholder="(79) 91234-5678"
+                value={formatarTelefone(telefone)}
+                onChange={(e) => setTelefone(apenasDigitos(e.target.value))}
+              />
             </div>
           </div>
 
