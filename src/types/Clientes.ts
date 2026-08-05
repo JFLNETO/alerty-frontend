@@ -39,12 +39,19 @@ export function apenasDigitos(telefone: string): string {
   return telefone.replace(/\D/g, "").slice(0, 11);
 }
 
-/** Formata dígitos de telefone para exibição no padrão (79) 91234-5678. */
+/**
+ * Formata dígitos de telefone para exibição.
+ * Celular (DDD + 9 dígitos): (79) 91234-5678 — traço entre os 5 primeiros e os 4 últimos.
+ * Fixo (DDD + 8 dígitos): (79) 9123-4567 — traço entre os 4 primeiros e os 4 últimos.
+ */
 export function formatarTelefone(telefone: string): string {
   const digitos = apenasDigitos(telefone);
   const ddd = digitos.slice(0, 2);
-  const parte1 = digitos.slice(2, 7);
-  const parte2 = digitos.slice(7, 11);
+  const numero = digitos.slice(2);
+
+  const tamanhoParte1 = numero.length > 8 ? 5 : 4;
+  const parte1 = numero.slice(0, tamanhoParte1);
+  const parte2 = numero.slice(tamanhoParte1, tamanhoParte1 + 4);
 
   let resultado = "";
   if (ddd) resultado += `(${ddd}`;
