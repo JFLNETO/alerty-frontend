@@ -34,9 +34,15 @@ export function formatarData(data: string): string {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
 }
 
-/** Remove tudo que não for dígito — é isso que deve ser salvo no backend. */
+/**
+ * Remove tudo que não for dígito e o DDI 55, se vier junto (ex: número copiado do próprio
+ * WhatsApp, no formato +55 79 98815-6894) — o campo sempre guarda só DDD + número, no máximo
+ * 11 dígitos.
+ */
 export function apenasDigitos(telefone: string): string {
-  return telefone.replace(/\D/g, "").slice(0, 11);
+  const digitos = telefone.replace(/\D/g, "");
+  const semDdi = digitos.length > 11 && digitos.startsWith("55") ? digitos.slice(2) : digitos;
+  return semDdi.slice(0, 11);
 }
 
 /**
