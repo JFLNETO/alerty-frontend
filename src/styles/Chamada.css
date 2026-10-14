@@ -1,0 +1,195 @@
+.chamada-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px 32px;
+  padding-top: 84px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.chamada-voltar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  align-self: flex-start;
+}
+
+.chamada-voltar:hover {
+  color: #111827;
+}
+
+.chamada-topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.chamada-topbar h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.chamada-subtitulo {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.chamada-data {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chamada-data label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.chamada-data input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.chamada-erro {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.chamada-lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.chamada-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  gap: 16px;
+  background: white;
+  flex-wrap: wrap;
+}
+
+.chamada-row:first-child {
+  border-top: 1px solid #e5e7eb;
+  border-radius: 8px 8px 0 0;
+}
+
+.chamada-row:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.chamada-aluno-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chamada-aluno-nome {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.chamada-badge-matriculado {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 99px;
+  width: fit-content;
+}
+
+.chamada-status-botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.chamada-btn-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chamada-btn-status:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chamada-btn-status.presente.ativo {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+.chamada-btn-status.ausente.ativo {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #b91c1c;
+}
+
+.chamada-vazio {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+@media (max-width: 640px) {
+  .chamada-main {
+    padding: 16px 16px 32px;
+    padding-top: 76px;
+  }
+
+  .chamada-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chamada-status-botoes {
+    width: 100%;
+  }
+
+  .chamada-btn-status {
+    flex: 1;
+    justify-content: center;
+  }
+}

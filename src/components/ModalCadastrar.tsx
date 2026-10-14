@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { apiPost, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
 import { apenasDigitos, formatarTelefone } from "../types/Clientes";
-import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
+import { formatarDiaHorario, type Turma } from "../types/Turma";
+import { User, Phone, Star, CalendarDays, CalendarClock, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Servico {
@@ -24,6 +25,9 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
   const [dropdownAberto, setDropdownAberto] = useState(false);
+  const [turmas, setTurmas] = useState<Turma[]>([]);
+  const [turmasSelecionadas, setTurmasSelecionadas] = useState<Turma[]>([]);
+  const [dropdownTurmaAberto, setDropdownTurmaAberto] = useState(false);
   const [fotoArquivo, setFotoArquivo] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
@@ -33,6 +37,9 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
   useEffect(() => {
     apiGet<Servico[]>("/servicos")
       .then(setServicos)
+      .catch(console.error);
+    apiGet<Turma[]>("/turmas")
+      .then(setTurmas)
       .catch(console.error);
   }, []);
 
@@ -45,6 +52,18 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
 
   function removerServico(id: number) {
     setServicosSelecionados(servicosSelecionados.filter((s) => s.id !== id));
+    setTurmasSelecionadas(turmasSelecionadas.filter((t) => t.idServico !== id));
+  }
+
+  function selecionarTurma(turma: Turma) {
+    if (!turmasSelecionadas.find((t) => t.id === turma.id)) {
+      setTurmasSelecionadas([...turmasSelecionadas, turma]);
+    }
+    setDropdownTurmaAberto(false);
+  }
+
+  function removerTurma(id: number) {
+    setTurmasSelecionadas(turmasSelecionadas.filter((t) => t.id !== id));
   }
 
   function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -69,6 +88,7 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
         telefone,
         dataVencimento,
         idServicos: servicosSelecionados.map((s) => s.id),
+        idTurmas: turmasSelecionadas.map((t) => t.id),
         urlFoto,
       });
 
@@ -83,6 +103,11 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
 
   const servicosDisponiveis = servicos.filter(
     (s) => !servicosSelecionados.find((sel) => sel.id === s.id)
+  );
+
+  const idsServicosSelecionados = servicosSelecionados.map((s) => s.id);
+  const turmasDisponiveis = turmas.filter(
+    (t) => idsServicosSelecionados.includes(t.idServico) && !turmasSelecionadas.find((sel) => sel.id === t.id)
   );
 
   return (
@@ -171,6 +196,42 @@ function ModalCadastrar({ onFechar, onSucesso }: Props) {
               )}
             </div>
           </div>
+
+          {/* TURMA DE REFERÊNCIA */}
+          {servicosSelecionados.length > 0 && (
+            <div className="modal-campo">
+              <label>Turma de referência (opcional)</label>
+              <div className="modal-dropdown-container">
+                <div
+                  className="modal-dropdown-trigger"
+                  onClick={() => setDropdownTurmaAberto(!dropdownTurmaAberto)}
+                >
+                  <CalendarClock size={16} strokeWidth={1.5} />
+                  <div className="modal-tags-inline">
+                    {turmasSelecionadas.length === 0 ? (
+                      <span className="modal-placeholder">Aluno frequenta qualquer turma da modalidade</span>
+                    ) : (
+                      turmasSelecionadas.map((t) => (
+                        <span key={t.id} className="modal-tag">
+                          {t.nome || formatarDiaHorario(t)}
+                          <button onClick={(e) => { e.stopPropagation(); removerTurma(t.id); }}>×</button>
+                        </span>
+                      ))
+                    )}
+                  </div>
+                </div>
+                {dropdownTurmaAberto && turmasDisponiveis.length > 0 && (
+                  <div className="modal-dropdown-lista">
+                    {turmasDisponiveis.map((t) => (
+                      <div key={t.id} className="modal-dropdown-item" onClick={() => selecionarTurma(t)}>
+                        {t.nome || formatarDiaHorario(t)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* DATA DE VENCIMENTO */}
           <div className="modal-campo">

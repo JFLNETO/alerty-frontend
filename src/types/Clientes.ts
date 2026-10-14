@@ -7,6 +7,7 @@ export interface Cliente {
   dataVencimento: string;
   dataUltimoPagamento: string | null;
   idServicos: number[];
+  idTurmas: number[] | null;
   selos: number[];
   idEmpresa: number;
   urlFoto: string | null;

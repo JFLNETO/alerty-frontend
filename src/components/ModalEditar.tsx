@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { apiPut, apiGet } from "../services/api";
 import { uploadFoto } from "../services/s3Upload";
 import { apenasDigitos, formatarTelefone, type Cliente } from "../types/Clientes";
-import { User, Phone, Star, CalendarDays, X, Pencil } from "lucide-react";
+import { formatarDiaHorario, type Turma } from "../types/Turma";
+import type { Graduacao, GraduacaoStatus } from "../types/Graduacao";
+import { User, Phone, Star, CalendarDays, CalendarClock, X, Pencil } from "lucide-react";
 import "../styles/Modal.css";
 
 interface Servico {
@@ -23,6 +25,12 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosSelecionados, setServicosSelecionados] = useState<Servico[]>([]);
   const [dropdownAberto, setDropdownAberto] = useState(false);
+  const [turmas, setTurmas] = useState<Turma[]>([]);
+  const [turmasSelecionadas, setTurmasSelecionadas] = useState<Turma[]>([]);
+  const [dropdownTurmaAberto, setDropdownTurmaAberto] = useState(false);
+  const [graduacoesPorServico, setGraduacoesPorServico] = useState<Record<number, Graduacao[]>>({});
+  const [graduacaoAtualPorServico, setGraduacaoAtualPorServico] = useState<Record<number, number>>({});
+  const [salvandoGraduacaoServico, setSalvandoGraduacaoServico] = useState<number | null>(null);
   const [fotoArquivo, setFotoArquivo] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string | null>(cliente.urlFoto);
   const [carregando, setCarregando] = useState(false);
@@ -34,18 +42,62 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
       setServicos(lista);
       const preSelected = lista.filter((s) => cliente.idServicos?.includes(s.id));
       setServicosSelecionados(preSelected);
+      preSelected.forEach((s) => carregarGraduacoesDoServico(s.id));
+    }).catch(console.error);
+    apiGet<Turma[]>("/turmas").then((lista) => {
+      setTurmas(lista);
+      const preSelected = lista.filter((t) => cliente.idTurmas?.includes(t.id));
+      setTurmasSelecionadas(preSelected);
+    }).catch(console.error);
+    apiGet<GraduacaoStatus[]>(`/clientes/${cliente.id}/graduacoes`).then((lista) => {
+      const mapa: Record<number, number> = {};
+      lista.forEach((g) => { mapa[g.idServico] = g.idGraduacaoAtual; });
+      setGraduacaoAtualPorServico(mapa);
     }).catch(console.error);
   }, []);
+
+  function carregarGraduacoesDoServico(idServico: number) {
+    if (graduacoesPorServico[idServico]) return;
+    apiGet<Graduacao[]>(`/servicos/${idServico}/graduacoes`)
+      .then((lista) => setGraduacoesPorServico((atual) => ({ ...atual, [idServico]: lista })))
+      .catch(console.error);
+  }
+
+  async function alterarGraduacao(idServico: number, idGraduacao: number) {
+    setSalvandoGraduacaoServico(idServico);
+    setErro("");
+    try {
+      await apiPut(`/clientes/${cliente.id}/graduacoes/${idServico}`, { idGraduacao });
+      setGraduacaoAtualPorServico((atual) => ({ ...atual, [idServico]: idGraduacao }));
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : "Erro ao atualizar graduação.");
+    } finally {
+      setSalvandoGraduacaoServico(null);
+    }
+  }
 
   function selecionarServico(servico: Servico) {
     if (!servicosSelecionados.find((s) => s.id === servico.id)) {
       setServicosSelecionados([...servicosSelecionados, servico]);
+      carregarGraduacoesDoServico(servico.id);
     }
     setDropdownAberto(false);
   }
 
   function removerServico(id: number) {
     setServicosSelecionados(servicosSelecionados.filter((s) => s.id !== id));
+    setTurmasSelecionadas(turmasSelecionadas.filter((t) => t.idServico !== id));
+  }
+
+  function selecionarTurma(turma: Turma) {
+    if (!turmasSelecionadas.find((t) => t.id === turma.id)) {
+      setTurmasSelecionadas([...turmasSelecionadas, turma]);
+    }
+    setDropdownTurmaAberto(false);
+  }
+
+  function removerTurma(id: number) {
+    setTurmasSelecionadas(turmasSelecionadas.filter((t) => t.id !== id));
   }
 
   function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -71,6 +123,7 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
         telefone,
         dataVencimento,
         idServicos: servicosSelecionados.map((s) => s.id),
+        idTurmas: turmasSelecionadas.map((t) => t.id),
         urlFoto,
       });
 
@@ -85,6 +138,11 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
 
   const servicosDisponiveis = servicos.filter(
     (s) => !servicosSelecionados.find((sel) => sel.id === s.id)
+  );
+
+  const idsServicosSelecionados = servicosSelecionados.map((s) => s.id);
+  const turmasDisponiveis = turmas.filter(
+    (t) => idsServicosSelecionados.includes(t.idServico) && !turmasSelecionadas.find((sel) => sel.id === t.id)
   );
 
   return (
@@ -149,12 +207,31 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
                   {servicosSelecionados.length === 0 ? (
                     <span className="modal-placeholder">Selecione as modalidades</span>
                   ) : (
-                    servicosSelecionados.map((s) => (
-                      <span key={s.id} className="modal-tag">
-                        {s.nome}
-                        <button onClick={(e) => { e.stopPropagation(); removerServico(s.id); }}>×</button>
-                      </span>
-                    ))
+                    servicosSelecionados.map((s) => {
+                      const graduacoes = graduacoesPorServico[s.id] ?? [];
+                      const idGraduacaoAtual = graduacaoAtualPorServico[s.id] ?? graduacoes[0]?.id;
+                      return (
+                        <span key={s.id} className="modal-tag-grupo">
+                          <span className="modal-tag">
+                            {s.nome}
+                            <button onClick={(e) => { e.stopPropagation(); removerServico(s.id); }}>×</button>
+                          </span>
+                          {graduacoes.length > 0 && (
+                            <select
+                              className="modal-tag-graduacao"
+                              value={idGraduacaoAtual ?? ""}
+                              disabled={salvandoGraduacaoServico === s.id}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => alterarGraduacao(s.id, Number(e.target.value))}
+                            >
+                              {graduacoes.map((g) => (
+                                <option key={g.id} value={g.id}>{g.nome}</option>
+                              ))}
+                            </select>
+                          )}
+                        </span>
+                      );
+                    })
                   )}
                 </div>
               </div>
@@ -169,6 +246,42 @@ function ModalEditar({ cliente, onFechar, onSucesso }: Props) {
               )}
             </div>
           </div>
+
+          {/* TURMA DE REFERÊNCIA */}
+          {servicosSelecionados.length > 0 && (
+            <div className="modal-campo">
+              <label>Turma de referência (opcional)</label>
+              <div className="modal-dropdown-container">
+                <div
+                  className="modal-dropdown-trigger"
+                  onClick={() => setDropdownTurmaAberto(!dropdownTurmaAberto)}
+                >
+                  <CalendarClock size={16} strokeWidth={1.5} />
+                  <div className="modal-tags-inline">
+                    {turmasSelecionadas.length === 0 ? (
+                      <span className="modal-placeholder">Aluno frequenta qualquer turma da modalidade</span>
+                    ) : (
+                      turmasSelecionadas.map((t) => (
+                        <span key={t.id} className="modal-tag">
+                          {t.nome || formatarDiaHorario(t)}
+                          <button onClick={(e) => { e.stopPropagation(); removerTurma(t.id); }}>×</button>
+                        </span>
+                      ))
+                    )}
+                  </div>
+                </div>
+                {dropdownTurmaAberto && turmasDisponiveis.length > 0 && (
+                  <div className="modal-dropdown-lista">
+                    {turmasDisponiveis.map((t) => (
+                      <div key={t.id} className="modal-dropdown-item" onClick={() => selecionarTurma(t)}>
+                        {t.nome || formatarDiaHorario(t)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* DATA DE VENCIMENTO */}
           <div className="modal-campo">

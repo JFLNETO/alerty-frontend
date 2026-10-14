@@ -6,6 +6,10 @@ import BemVindo from "./pages/BemVindo";
 import Clientes from "./pages/Clientes";
 import Relatorio from "./pages/Relatorio";
 import Modalidades from "./pages/Modalidades";
+import Turmas from "./pages/Turmas";
+import Chamada from "./pages/Chamada";
+import GraduacaoRelatorio from "./pages/GraduacaoRelatorio";
+import GraduacoesCadastro from "./pages/GraduacoesCadastro";
 import ConectarWhatsApp from "./pages/ConectarWhatsApp";
 import Alertas from "./pages/Alertas";
 import PainelAdmin from "./pages/PainelAdmin";
@@ -62,6 +66,38 @@ function App() {
           element={
             <RotaProtegida>
               <Modalidades />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/turmas"
+          element={
+            <RotaProtegida>
+              <Turmas />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/turmas/:id/chamada"
+          element={
+            <RotaProtegida>
+              <Chamada />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/graduacoes"
+          element={
+            <RotaProtegida>
+              <GraduacaoRelatorio />
+            </RotaProtegida>
+          }
+        />
+        <Route
+          path="/modalidades/:id/graduacoes"
+          element={
+            <RotaProtegida>
+              <GraduacoesCadastro />
             </RotaProtegida>
           }
         />

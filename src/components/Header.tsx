@@ -8,6 +8,8 @@ const ITENS_NAV = [
   { rota: "/", label: "Meus clientes" },
   { rota: "/relatorio", label: "Relatório" },
   { rota: "/modalidades", label: "Modalidades" },
+  { rota: "/turmas", label: "Turmas" },
+  { rota: "/graduacoes", label: "Graduação" },
   { rota: "/alertas", label: "Alertas" },
   { rota: "/whatsapp", label: "WhatsApp" },
 ];

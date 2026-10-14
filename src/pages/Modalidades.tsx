@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { apiGet, apiDelete } from "../services/api";
 import type { Modalidade } from "../types/Modalidade";
 import { formatarRecorrencia } from "../types/Modalidade";
 import Header from "../components/Header";
 import ModalCadastrarModalidade from "../components/ModalCadastrarModalidade";
 import ModalEditarModalidade from "../components/ModalEditarModalidade";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, GraduationCap } from "lucide-react";
 import "../styles/Modalidades.css";
 
 function Modalidades() {
+  const navigate = useNavigate();
   const [modalidades, setModalidades] = useState<Modalidade[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [modalidadeEditar, setModalidadeEditar] = useState<Modalidade | null>(null);
@@ -63,6 +65,13 @@ function Modalidades() {
                 <span className="modalidade-nome">{modalidade.nome}</span>
                 <span className="modalidade-valor">{formatarRecorrencia(modalidade)}</span>
                 <div className="modalidade-acoes">
+                  <button
+                    className="btn-icone"
+                    onClick={() => navigate(`/modalidades/${modalidade.id}/graduacoes`)}
+                    title="Graduações"
+                  >
+                    <GraduationCap size={15} strokeWidth={1.5} />
+                  </button>
                   <button className="btn-icone" onClick={() => setModalidadeEditar(modalidade)} title="Editar">
                     <Pencil size={15} strokeWidth={1.5} />
                   </button>
