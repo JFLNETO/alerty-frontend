@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { login } from "../services/auth";
 import "../styles/Login.css";
 
+/** Volta pra página que pediu o login (só caminhos internos, pra não virar open redirect). */
+function destinoAposLogin(state: unknown): string {
+  const from = (state as { from?: { pathname?: string; search?: string } } | null)?.from;
+  const destino = `${from?.pathname ?? ""}${from?.search ?? ""}`;
+  return destino.startsWith("/") && !destino.startsWith("//") ? destino : "/";
+}
+
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -19,7 +27,7 @@ function Login() {
 
     try {
       await login(email, senha, manterConectado);
-      navigate("/");
+      navigate(destinoAposLogin(location.state), { replace: true });
     } catch (e: unknown) {
       setErro(e instanceof Error ? e.message : "Erro ao fazer login.");
     } finally {

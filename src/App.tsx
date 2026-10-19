@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { estaLogado, souAdmin } from "./services/auth";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
@@ -15,8 +15,10 @@ import Alertas from "./pages/Alertas";
 import PainelAdmin from "./pages/PainelAdmin";
 
 function RotaProtegida({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
   if (!estaLogado()) {
-    return <Navigate to="/login" replace />;
+    // Guarda o destino (ex.: /?cliente=123 do aviso de WhatsApp) pra voltar nele depois do login.
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
   return <>{children}</>;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { apiGet, apiPatch } from "../services/api";
 import type { Cliente } from "../types/Clientes";
 import { getStatusCliente, formatarData } from "../types/Clientes";
@@ -18,6 +19,7 @@ function Clientes() {
   const [clientePagamento, setClientePagamento] = useState<Cliente | null>(null);
   const [clienteEditar, setClienteEditar] = useState<Cliente | null>(null);
   const [mostrarCadastrar, setMostrarCadastrar] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   async function carregarClientes() {
     try {
@@ -36,6 +38,20 @@ function Clientes() {
   useEffect(() => {
     carregarClientes();
   }, [filtroAtivo]);
+
+  // Link do aviso de WhatsApp (/?cliente=123): abre direto o modal daquele aluno.
+  // Busca por id em vez de procurar na lista, porque a lista começa filtrada só nos ativos.
+  useEffect(() => {
+    const idCliente = Number(searchParams.get("cliente"));
+    if (!searchParams.has("cliente")) return;
+
+    setSearchParams({}, { replace: true });
+    if (!Number.isInteger(idCliente) || idCliente <= 0) return;
+
+    apiGet<Cliente>(`/clientes/${idCliente}`)
+      .then(setClienteEditar)
+      .catch(console.error);
+  }, []);
 
   async function alterarStatus(cliente: Cliente) {
     try {
