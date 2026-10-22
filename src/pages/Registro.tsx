@@ -90,7 +90,7 @@ function Registro() {
           <div className="login-senha-wrapper">
             <input
               type={mostrarSenha ? "text" : "password"}
-              placeholder="mínimo 6 caracteres"
+              placeholder="mínimo 8 caracteres"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
